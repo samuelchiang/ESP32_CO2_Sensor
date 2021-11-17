@@ -3,7 +3,6 @@
 #include <ArduinoJson.h> // https://github.com/bblanchon/ArduinoJson
 #include <SPIFFS.h>
 #include <PubSubClient.h> //for mqtt
-#include <max6675.h>
 #include <Adafruit_GFX.h> //for oled
 #include <Adafruit_SSD1306.h> //for oled
 #include <CRCx.h> //https://github.com/hideakitai/CRCx
@@ -14,11 +13,6 @@
 //------------------------------------------ pin --------------------------------------------------------------
 //buzzer
 int BUZZER_PIN = 25;     //蜂鳴器控制腳位
-
-//Max6675 pin
-const int8_t thermoSO1 = 23; //SO1
-const int8_t thermoCS1 = 22; //CS1
-const int8_t thermoCLK1 = 21; //SCK1
 
 //For Reset WiFi Button
 const int btnWiFiResetPin = 32;  
@@ -34,12 +28,6 @@ const int ONBOARD_LED = 2;
 
 char DeviceId[32] = "CO2_BOX";  // Device ID, SSID
 char APPassword[32] = "1qaz2wsx";  // Wifi AP Password
-
-//global config with default value
-int   HeaterPWMfreq=120;
-float kp=2.5;
-float ki=0.06;
-float kd=0.8;
 
 //MQTT
 char mqttServer[40] = "";  // MQTT伺服器位址
@@ -385,18 +373,6 @@ void WIFI::readConfig(){
         if (!doc.isNull()) {
           Serial.println("\nparsed json");
 
-          if (doc.containsKey("HeaterPWMfreq")){
-            HeaterPWMfreq = atoi(doc["HeaterPWMfreq"]);
-          }
-          if (doc.containsKey("kp")){
-            kp = atof(doc["kp"]);
-          }
-          if (doc.containsKey("ki")){
-            ki = atof(doc["ki"]);
-          }
-          if (doc.containsKey("kd")){
-            kd = atof(doc["kd"]);
-          }
           if (doc.containsKey("mqttServer")){
             strcpy(mqttServer, doc["mqttServer"]);  
           }
